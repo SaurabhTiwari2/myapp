@@ -2,7 +2,8 @@ import User from "../models/user.model.js";
 import Purchase from "../models/purchase.model.js";
 import { Course } from "../models/course.model.js";
 import { z } from "zod";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
+
 import jwt from "jsonwebtoken";
 import config from "../config.js";
 
@@ -105,7 +106,7 @@ export const purchases = async (req, res) => {
 
         let purchasedCourseId = [];
         for (let i = 0; i < purchased.length; i++) {
-            purchasedCourseId.push(purchased[i].courseId); // Fixed variable name
+            purchasedCourseId.push(purchased[i].courseId); 
         }
 
         const courseData = await Course.find({ _id: { $in: purchasedCourseId } });
