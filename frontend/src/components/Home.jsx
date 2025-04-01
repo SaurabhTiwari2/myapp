@@ -23,7 +23,7 @@ function Home() {
   }, []);
   const handleLogout = async () => {
     try {
-      await axios.get(`${BACKEND_URL}/v1/user/logout`, {
+      await axios.get(`${BACKEND_URL}/user/logout`, {
         withCredentials: true, // Ensure cookies are sent
       });
   
