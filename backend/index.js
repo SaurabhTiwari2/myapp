@@ -1,4 +1,4 @@
-import express from'express';
+import express from 'express';
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
@@ -8,10 +8,11 @@ import adminRoute from "./routes/admin.route.js";
 import fileUpload from "express-fileupload"
 import cookieParser from 'cookie-parser';
 import cors from "cors";
-// import Slider from "react-slick";
+
 const app = express()
 dotenv.config();
-// middleware use krenege kuki image,price ye sb mil ni rhe hain
+
+// Middleware
 app.use(express.json()); 
 app.use(cookieParser());
 app.use(
@@ -20,17 +21,31 @@ app.use(
         tempFileDir: '/tmp',
     })
 );
+
+// Proper CORS Configuration
+const allowedOrigins = [
+    "https://myapp-rho-seven.vercel.app", // ✅ Replace with your actual frontend URL
+    
+];
+
 app.use(
     cors({
-      origin: process.env.FRONTEND_URL,
-      credentials: true,
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      allowedHeaders: ["Content-Type", "Authorization"],
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
     })
-  );
-  
+);
+
 const port = process.env.PORT || 3000;
-// /Database Connection
+
+// Database Connection
 const DB_URI = process.env.MONGO_URI;
 const connectDB = async () => {
     try {
@@ -41,18 +56,19 @@ const connectDB = async () => {
     }
 };
 connectDB();
+
 // Cloudinary Config
 cloudinary.config({
     cloud_name: process.env.cloud_name,
     api_key: process.env.API_KEY,
     api_secret: process.env.API_SECRET
 });
-//  defining routes
+
+// Routes
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/admin", adminRoute);
 
-
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-})
+});
