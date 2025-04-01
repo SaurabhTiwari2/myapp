@@ -44,7 +44,7 @@ function Purchases() {
     const fetchPurchases = async () => {
       try {
         console.log("Fetching purchases with token:", token);
-        const response = await axios.get(`${BACKEND_URL}/User/purchases`, {
+        const response = await axios.get(`${BACKEND_URL}/user/purchases`, {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
