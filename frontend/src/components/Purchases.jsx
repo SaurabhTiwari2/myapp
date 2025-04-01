@@ -8,6 +8,7 @@ import { RiHome2Fill } from "react-icons/ri";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../utils/utils";
+
 function Purchases() {
   const [purchases, setPurchases] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,7 +17,6 @@ function Purchases() {
   
   const navigate = useNavigate();
 
-  // Fix: Parse user data safely and check for token
   const user = localStorage.getItem("user");
   let parsedUser = null;
   let token = null;
@@ -62,15 +62,23 @@ function Purchases() {
 
   const handleLogout = async () => {
     try {
+      if (!token) {
+        toast.error("You are already logged out.");
+        navigate("/login");
+        return;
+      }
+
       const response = await axios.get(`${BACKEND_URL}/user/logout`, {
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
+
       toast.success(response.data.message);
       localStorage.removeItem("user");
       navigate("/login");
       setIsLoggedIn(false);
     } catch (error) {
-      toast.error(error.response?.data?.errors || "Error in logging out");
+      toast.error(error.response?.data?.message || "Error logging out");
     }
   };
 
